@@ -1,0 +1,82 @@
+{
+    "name": "PlayerInput",
+    "maps": [
+        {
+            "name": "MevoInput",
+            "id": "4762a273-37bc-49db-80cf-81a06bbe4543",
+            "actions": [
+                {
+                    "name": "SelectMevo",
+                    "type": "Button",
+                    "id": "8f37a36d-8c9b-46ee-99c5-bd6cde2f1c29",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveMevo",
+                    "type": "Button",
+                    "id": "db044c51-d173-4373-852d-3770880760ba",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "95197e2e-a67b-4038-b957-1486e3e68c59",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveMevo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e840d7df-1650-4474-a16d-849a9f84669b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectMevo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "CameraInput",
+            "id": "835f19e7-7b40-4a45-b1fe-ecb277cce043",
+            "actions": [
+                {
+                    "name": "cascas",
+                    "type": "Button",
+                    "id": "b671a21c-6ade-4575-b06e-32b89eb0e0ea",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b2310aa7-2a64-4be1-bf65-88e0b8f2818f",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "cascas",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
