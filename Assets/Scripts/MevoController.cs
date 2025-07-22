@@ -3,12 +3,24 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class MevoController : MonoBehaviour
 {
-    MevoState currentState;
-    Vector3 targetPosition;
+    public MevoState currentMevoState;
+    public Vector3 targetPosition;
+    public GameObject targetObject;
+    public GameObject holdingObject;
+
+    [Header ("References")]
+    [SerializeField]
+    Transform holdPosition;
+
+    [Header ("Attributes")]
     [SerializeField]
     float moveSpeed;
     [SerializeField]
-    float distanceToTarget;
+    float distanceToPosition;
+    [SerializeField]
+    float distanceToObject;
+    [SerializeField]
+    Vector3 nullVectorValue;
 
     public enum MevoState
     {
@@ -19,49 +31,96 @@ public class MevoController : MonoBehaviour
 
     private void Update()
     {
-        OnStateBehaviour();
+        float dt = Time.deltaTime;
+
+        OnStateBehaviour(dt);
     }
 
-    public void OnStateBehaviour()
+    public void OnStateBehaviour(float dt)
     {
-        switch (currentState)
+        if (targetObject != null)
+        {
+            targetObject.transform.position = holdPosition.position;
+        }
+
+        switch (currentMevoState)
         {
             case MevoState.Idle:
                 break;
-            case MevoState.Walking:
-                if (Vector3.Distance(transform.position, targetPosition) <= distanceToTarget)
-                {
-                    Vector3 walkDirection = (targetPosition - transform.position).normalized;
 
-                    transform.Translate(walkDirection * moveSpeed);
+            case MevoState.Walking:
+                if (targetObject != null)
+                {
+                    if (Vector3.Distance(transform.position, targetObject.transform.position) > distanceToObject)
+                    {
+                        Vector3 walkDirection = (targetObject.transform.position - transform.position).normalized;
+
+                        transform.Translate(walkDirection * moveSpeed * dt);
+                    }
+                    else
+                    {
+                        targetObject.transform.position = holdPosition.position;
+                        targetObject = null;
+                        targetPosition = nullVectorValue;
+                    }
                 }
                 else
                 {
-                    TransitionToIdleState();
+                    if (Vector3.Distance(transform.position, targetPosition) > distanceToPosition)
+                    {
+                        Vector3 walkDirection = (targetPosition - transform.position).normalized;
+
+                        transform.Translate(walkDirection * moveSpeed * dt);
+                    }
+                    else
+                    {
+                        targetPosition = nullVectorValue;
+                    }
+                }
+                break;
+
+            case MevoState.Reaching:
+                if (Vector3.Distance(transform.position, targetObject.transform.position) > distanceToObject)
+                {
+                    Vector3 walkDirection = (targetObject.transform.position - transform.position).normalized;
+
+                    transform.Translate(walkDirection * moveSpeed * dt);
+                }
+                else
+                {
+
                 }
                 break;
         }
+
+        CheckTransitionConditions();
     }
 
-    public void TransitionToIdleState()
+    private void CheckTransitionConditions()
     {
-        targetPosition = Vector3.zero;
-        SetCurrentState(MevoState.Idle);
+        if (targetPosition != nullVectorValue || targetObject != null)
+            TransitionToState(MevoState.Walking);
+        else
+            TransitionToState(MevoState.Idle);
     }
 
-    public void TransitionToWalkingState(Vector3 newTargetPosition)
+    private void TransitionToState(MevoState newState)
+    {
+        currentMevoState = newState;
+    }
+
+    private MevoState GetCurrentState()
+    {
+        return currentMevoState;
+    }
+
+    public void SetTargetPosition(Vector3 newTargetPosition)
     {
         targetPosition = newTargetPosition;
-        SetCurrentState(MevoState.Walking);
     }
 
-    public MevoState GetCurrentState()
+    public void SetTargetObject(GameObject newTargetObject)
     {
-        return currentState;
-    }
-
-    public void SetCurrentState(MevoState newCurrentState)
-    {
-        currentState = newCurrentState;
+        targetObject = newTargetObject;
     }
 }
