@@ -5,7 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Mevo
-  - Object
+  - Holdable
   layers:
   - Default
   - TransparentFX

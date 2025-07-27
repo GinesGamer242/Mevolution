@@ -10,9 +10,9 @@ public class MevoManager : MonoBehaviour
     [SerializeField]
     string mevoTag;
     [SerializeField]
-    string objectTag;
+    string holdableTag;
 
-    [Header("Target Position Settings")]
+    [Header("Group Settings")]
     [SerializeField]
     int mevoSelectionLimit;
     [SerializeField]
@@ -27,7 +27,6 @@ public class MevoManager : MonoBehaviour
         if (!rayHit.collider) return;
         if (!rayHit.collider.gameObject.CompareTag(mevoTag)) return;
 
-        if (!rayHit.collider.gameObject.CompareTag(mevoTag)) Debug.Log("The GameObject clicked wasn't a Mevo!");
         AddMevoToList(rayHit.collider.gameObject);
 
         Mevo selectedMevo = GetMevoByGameObject(rayHit.collider.gameObject);
@@ -58,19 +57,16 @@ public class MevoManager : MonoBehaviour
 
         List<Mevo> selectedMevoList = GetSelectedMevos();
 
-        if (selectedMevoList.Count == 1)
-        {
-            if (rayHit.collider.gameObject.CompareTag(objectTag))
-            {
-                selectedMevoList[0].gameObject.GetComponent<MevoController>().SetTargetObject(rayHit.collider.gameObject);
-            }
-        }
-
         for (int i = 0; i < selectedMevoList.Count; i++)
         {
             Vector3 mevoTargetPosition = CalculateMevoTargetPosition(i, mousePosition);
 
             selectedMevoList[i].gameObject.GetComponent<MevoController>().SetTargetPosition(mevoTargetPosition);
+        }
+
+        if (selectedMevoList.Count == 1 && rayHit.collider.gameObject.CompareTag(holdableTag))
+        {
+            selectedMevoList[0].gameObject.GetComponent<MevoController>().SetTargetObject(rayHit.collider.gameObject);
         }
     }
 

@@ -5,28 +5,35 @@ public class MevoController : MonoBehaviour
 {
     public MevoState currentMevoState;
     public Vector3 targetPosition;
-    public GameObject targetObject;
-    public GameObject holdingObject;
+    public GameObject targetHoldable;
+    public IHoldable currentHoldable;
 
     [Header ("References")]
     [SerializeField]
-    Transform holdPosition;
+    SpriteRenderer holdSpriteRenderer;
 
     [Header ("Attributes")]
     [SerializeField]
     float moveSpeed;
     [SerializeField]
+    [Range(0.0f, 1.0f)]
+    float holdSpeedPenalization;
+    [SerializeField]
     float distanceToPosition;
     [SerializeField]
-    float distanceToObject;
+    float distanceToHoldable;
     [SerializeField]
     Vector3 nullVectorValue;
 
     public enum MevoState
     {
         Idle,
-        Walking,
-        Reaching
+        Walking
+    }
+
+    private void Start()
+    {
+        targetPosition = nullVectorValue;
     }
 
     private void Update()
@@ -38,57 +45,34 @@ public class MevoController : MonoBehaviour
 
     public void OnStateBehaviour(float dt)
     {
-        if (targetObject != null)
-        {
-            targetObject.transform.position = holdPosition.position;
-        }
-
         switch (currentMevoState)
         {
             case MevoState.Idle:
                 break;
 
             case MevoState.Walking:
-                if (targetObject != null)
+                if (Vector3.Distance(transform.position, targetPosition) > distanceToPosition)
                 {
-                    if (Vector3.Distance(transform.position, targetObject.transform.position) > distanceToObject)
-                    {
-                        Vector3 walkDirection = (targetObject.transform.position - transform.position).normalized;
-
+                    Vector3 walkDirection = (targetPosition - transform.position).normalized;
+                    if (currentHoldable == null)
                         transform.Translate(walkDirection * moveSpeed * dt);
-                    }
                     else
+                        transform.Translate(walkDirection * moveSpeed * (1 - holdSpeedPenalization) * dt);
+
+                    if (targetHoldable != null)
                     {
-                        targetObject.transform.position = holdPosition.position;
-                        targetObject = null;
-                        targetPosition = nullVectorValue;
+                        if (Vector3.Distance(transform.position, targetPosition) <= distanceToHoldable)
+                        {
+                            if (targetHoldable.TryGetComponent<IHoldable>(out IHoldable holdable))
+                                PickHoldableUp(holdable);
+
+                            targetPosition = nullVectorValue;
+                        }
                     }
                 }
                 else
                 {
-                    if (Vector3.Distance(transform.position, targetPosition) > distanceToPosition)
-                    {
-                        Vector3 walkDirection = (targetPosition - transform.position).normalized;
-
-                        transform.Translate(walkDirection * moveSpeed * dt);
-                    }
-                    else
-                    {
-                        targetPosition = nullVectorValue;
-                    }
-                }
-                break;
-
-            case MevoState.Reaching:
-                if (Vector3.Distance(transform.position, targetObject.transform.position) > distanceToObject)
-                {
-                    Vector3 walkDirection = (targetObject.transform.position - transform.position).normalized;
-
-                    transform.Translate(walkDirection * moveSpeed * dt);
-                }
-                else
-                {
-
+                    targetPosition = nullVectorValue;
                 }
                 break;
         }
@@ -98,7 +82,7 @@ public class MevoController : MonoBehaviour
 
     private void CheckTransitionConditions()
     {
-        if (targetPosition != nullVectorValue || targetObject != null)
+        if (targetPosition != nullVectorValue)
             TransitionToState(MevoState.Walking);
         else
             TransitionToState(MevoState.Idle);
@@ -109,6 +93,44 @@ public class MevoController : MonoBehaviour
         currentMevoState = newState;
     }
 
+    private void PickHoldableUp(IHoldable holdable)
+    {
+        targetHoldable = null;
+        currentHoldable = holdable;
+
+        switch (currentHoldable.GetHoldableCategory())
+        {
+            case HoldableCategory.Food:
+                foreach (Food foodItem in GameManager.instance.foodList)
+                {
+                    if (foodItem.GetFoodType().Equals(currentHoldable.GetFoodType()))
+                    {
+                        holdSpriteRenderer.sprite = foodItem.GetSprite();
+                    }
+                }
+                break;
+
+            case HoldableCategory.Object:
+                foreach (Object objectItem in GameManager.instance.objectList)
+                {
+                    if (objectItem.GetObjectType().Equals(currentHoldable.GetObjectType()))
+                    {
+                        holdSpriteRenderer.sprite = objectItem.GetSprite();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void PutHoldableDown()
+    {
+        currentHoldable = null;
+    }
+
+      /////////////////////////
+     /// GETTERS Y SETTERS ///
+    /////////////////////////
+    
     private MevoState GetCurrentState()
     {
         return currentMevoState;
@@ -121,6 +143,7 @@ public class MevoController : MonoBehaviour
 
     public void SetTargetObject(GameObject newTargetObject)
     {
-        targetObject = newTargetObject;
+        targetHoldable = newTargetObject;
+        targetPosition = newTargetObject.transform.position;
     }
 }
