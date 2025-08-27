@@ -19,7 +19,4 @@ public class GameManager : MonoBehaviour
     }
 
     //////////////////////////////////////////
-
-    public Food[] foodList;
-    public Object[] objectList;
 }

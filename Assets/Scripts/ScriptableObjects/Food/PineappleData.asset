@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 396f6e0a138e610458aa22f2d1a1c6bf, type: 3}
+  m_Name: PineappleData
+  m_EditorClassIdentifier: 
+  holdableCategory: 0
+  foodType: 1
+  materialType: 0
+  sprite: {fileID: -724105580326358498, guid: 659e33c7b291f294594b8493d1814823, type: 3}
+  prefab: {fileID: 5803289922257807315, guid: 08f54293cf4e60c4da4542383afe112b, type: 3}

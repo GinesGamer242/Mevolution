@@ -150,12 +150,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentMevoState: 0
   targetPosition: {x: 0, y: 0, z: 0}
-  targetHoldable: {fileID: 0}
+  targetHoldableGameObject: {fileID: 0}
+  currentHoldableData: {fileID: 0}
   holdSpriteRenderer: {fileID: 9067733498820468526}
   moveSpeed: 5
   holdSpeedPenalization: 0.69
   distanceToPosition: 0.1
-  distanceToHoldable: 0
+  distanceToHoldable: 0.1
   nullVectorValue: {x: 0, y: 0, z: 1}
 --- !u!1 &6563159277167955385
 GameObject:

@@ -5,8 +5,8 @@ public class MevoController : MonoBehaviour
 {
     public MevoState currentMevoState;
     public Vector3 targetPosition;
-    public GameObject targetHoldable;
-    public IHoldable currentHoldable;
+    public GameObject targetHoldableGameObject;
+    public HoldableData currentHoldableData;
 
     [Header ("References")]
     [SerializeField]
@@ -54,17 +54,18 @@ public class MevoController : MonoBehaviour
                 if (Vector3.Distance(transform.position, targetPosition) > distanceToPosition)
                 {
                     Vector3 walkDirection = (targetPosition - transform.position).normalized;
-                    if (currentHoldable == null)
+                    if (currentHoldableData == null)
                         transform.Translate(walkDirection * moveSpeed * dt);
                     else
                         transform.Translate(walkDirection * moveSpeed * (1 - holdSpeedPenalization) * dt);
 
-                    if (targetHoldable != null)
+                    if (targetHoldableGameObject != null)
                     {
                         if (Vector3.Distance(transform.position, targetPosition) <= distanceToHoldable)
                         {
-                            if (targetHoldable.TryGetComponent<IHoldable>(out IHoldable holdable))
-                                PickHoldableUp(holdable);
+                            Debug.Log("Distance to pick up: " + distanceToHoldable);
+                            if (targetHoldableGameObject.TryGetComponent<IHoldable>(out IHoldable holdable))
+                                PickHoldableUp(holdable.GetHoldableData());
 
                             targetPosition = nullVectorValue;
                         }
@@ -72,6 +73,10 @@ public class MevoController : MonoBehaviour
                 }
                 else
                 {
+                    if (currentHoldableData != null)
+                    {
+                        PutHoldableDown();
+                    }
                     targetPosition = nullVectorValue;
                 }
                 break;
@@ -93,38 +98,23 @@ public class MevoController : MonoBehaviour
         currentMevoState = newState;
     }
 
-    private void PickHoldableUp(IHoldable holdable)
+    private void PickHoldableUp(HoldableData holdable)
     {
-        targetHoldable = null;
-        currentHoldable = holdable;
+        Debug.Log("Picking up");
+        Destroy(targetHoldableGameObject);
+        targetHoldableGameObject = null;
+        currentHoldableData = holdable;
 
-        switch (currentHoldable.GetHoldableCategory())
-        {
-            case HoldableCategory.Food:
-                foreach (Food foodItem in GameManager.instance.foodList)
-                {
-                    if (foodItem.GetFoodType().Equals(currentHoldable.GetFoodType()))
-                    {
-                        holdSpriteRenderer.sprite = foodItem.GetSprite();
-                    }
-                }
-                break;
-
-            case HoldableCategory.Object:
-                foreach (Object objectItem in GameManager.instance.objectList)
-                {
-                    if (objectItem.GetObjectType().Equals(currentHoldable.GetObjectType()))
-                    {
-                        holdSpriteRenderer.sprite = objectItem.GetSprite();
-                    }
-                }
-                break;
-        }
+        holdSpriteRenderer.sprite = currentHoldableData.sprite;
     }
 
     private void PutHoldableDown()
     {
-        currentHoldable = null;
+        Debug.Log("Putting down");
+        Instantiate(currentHoldableData.prefab, transform.position, Quaternion.Euler(Vector3.zero));
+        currentHoldableData = null;
+
+        holdSpriteRenderer.sprite = null;
     }
 
       /////////////////////////
@@ -141,9 +131,9 @@ public class MevoController : MonoBehaviour
         targetPosition = newTargetPosition;
     }
 
-    public void SetTargetObject(GameObject newTargetObject)
+    public void SetTargetGameObject(GameObject newTargetGameObject)
     {
-        targetHoldable = newTargetObject;
-        targetPosition = newTargetObject.transform.position;
+        targetHoldableGameObject = newTargetGameObject;
+        targetPosition = newTargetGameObject.transform.position;
     }
 }

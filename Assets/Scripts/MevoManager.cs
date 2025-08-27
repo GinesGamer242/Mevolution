@@ -24,24 +24,28 @@ public class MevoManager : MonoBehaviour
 
         var rayHit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()));
 
-        if (!rayHit.collider) return;
-        if (!rayHit.collider.gameObject.CompareTag(mevoTag)) return;
+        if (!rayHit.collider)
+        {
+            foreach (var mevo in mevoList)
+            {
+                ChangeMevoSelection(mevo, false);
+            }
+        }
+
+        if (!rayHit.collider.gameObject.CompareTag(mevoTag))
+            return;
 
         AddMevoToList(rayHit.collider.gameObject);
 
         Mevo selectedMevo = GetMevoByGameObject(rayHit.collider.gameObject);
 
         if (selectedMevo.isSelected)
-        {
-            selectedMevo.isSelected = false;
-            ChangeMevoColor(selectedMevo, Color.white);
-        }
+            ChangeMevoSelection(selectedMevo, false);
         else
         {
             if (GetSelectedMevos().Count < mevoSelectionLimit)
             {
-                selectedMevo.isSelected = true;
-                ChangeMevoColor(selectedMevo, Color.green);
+                ChangeMevoSelection(selectedMevo, true);
             }
         }
     }
@@ -66,7 +70,7 @@ public class MevoManager : MonoBehaviour
 
         if (selectedMevoList.Count == 1 && rayHit.collider.gameObject.CompareTag(holdableTag))
         {
-            selectedMevoList[0].gameObject.GetComponent<MevoController>().SetTargetObject(rayHit.collider.gameObject);
+            selectedMevoList[0].gameObject.GetComponent<MevoController>().SetTargetGameObject(rayHit.collider.gameObject);
         }
     }
 
@@ -78,8 +82,10 @@ public class MevoManager : MonoBehaviour
     {
         //Check if the Mevo exists already in list
         bool isMevoInList = false;
+
         for (int i = 0; i < mevoList.Count; i++)
-            if (mevoList[i].gameObject == mevoGameObject) isMevoInList = true;
+            if (mevoList[i].gameObject == mevoGameObject)
+                isMevoInList = true;
         
         if (!isMevoInList)
             mevoList.Add(new Mevo(mevoList.Count, false, mevoGameObject));
@@ -130,5 +136,15 @@ public class MevoManager : MonoBehaviour
         newTargetPosition = new Vector3(x, y, 0);
 
         return newTargetPosition;
+    }
+
+    private void ChangeMevoSelection(Mevo mevo, bool selectedState)
+    {
+        mevo.isSelected = selectedState;
+
+        if (selectedState == true)
+            ChangeMevoColor(mevo, Color.green);
+        else
+            ChangeMevoColor(mevo, Color.white);
     }
 }

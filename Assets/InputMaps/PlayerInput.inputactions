@@ -2,7 +2,7 @@
     "name": "PlayerInput",
     "maps": [
         {
-            "name": "MevoInput",
+            "name": "PlayerInput",
             "id": "4762a273-37bc-49db-80cf-81a06bbe4543",
             "actions": [
                 {
@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MoveCamera",
+                    "type": "Value",
+                    "id": "7b7254d3-acc7-4fcc-a36c-881beb332556",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -46,32 +55,15 @@
                     "action": "SelectMevo",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "CameraInput",
-            "id": "835f19e7-7b40-4a45-b1fe-ecb277cce043",
-            "actions": [
-                {
-                    "name": "cascas",
-                    "type": "Button",
-                    "id": "b671a21c-6ade-4575-b06e-32b89eb0e0ea",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "b2310aa7-2a64-4be1-bf65-88e0b8f2818f",
-                    "path": "<Keyboard>/anyKey",
+                    "id": "ad4e3219-a521-4740-9d1b-a1a648a2ff58",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "cascas",
+                    "action": "MoveCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

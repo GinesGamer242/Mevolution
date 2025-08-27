@@ -5,16 +5,22 @@ using UnityEngine;
 public enum HoldableCategory
 {
     Food,
-    Object
+    Material
+}
+
+public enum FoodType
+{
+    None,
+    Pineapple
+}
+
+public enum MaterialType
+{
+    None,
+    Stone
 }
 
 public interface IHoldable
 {
-    public HoldableCategory GetHoldableCategory();
-
-    public FoodType GetFoodType();
-
-    public ObjectType GetObjectType();
-
-    public Sprite GetSprite();
+    public HoldableData GetHoldableData();
 }
