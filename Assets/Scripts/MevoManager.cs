@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem.Interactions;
 
 public class MevoManager : MonoBehaviour
 {
@@ -20,32 +21,34 @@ public class MevoManager : MonoBehaviour
 
     public void OnMevoSelect(InputAction.CallbackContext context)
     {
-        if (!context.started) return;
+        if (!context.performed)
+            return;
 
         var rayHit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()));
 
-        if (!rayHit.collider)
+        if (!rayHit || !rayHit.collider.gameObject.CompareTag(mevoTag))
         {
             foreach (var mevo in mevoList)
             {
                 ChangeMevoSelection(mevo, false);
             }
+            return;
         }
 
-        if (!rayHit.collider.gameObject.CompareTag(mevoTag))
-            return;
-
-        AddMevoToList(rayHit.collider.gameObject);
-
-        Mevo selectedMevo = GetMevoByGameObject(rayHit.collider.gameObject);
-
-        if (selectedMevo.isSelected)
-            ChangeMevoSelection(selectedMevo, false);
-        else
+        if (rayHit.collider.gameObject.CompareTag(mevoTag))
         {
-            if (GetSelectedMevos().Count < mevoSelectionLimit)
+            AddMevoToList(rayHit.collider.gameObject);
+
+            Mevo selectedMevo = GetMevoByGameObject(rayHit.collider.gameObject);
+
+            if (selectedMevo.isSelected)
+                ChangeMevoSelection(selectedMevo, false);
+            else
             {
-                ChangeMevoSelection(selectedMevo, true);
+                if (GetSelectedMevos().Count < mevoSelectionLimit)
+                {
+                    ChangeMevoSelection(selectedMevo, true);
+                }
             }
         }
     }
@@ -61,11 +64,15 @@ public class MevoManager : MonoBehaviour
 
         List<Mevo> selectedMevoList = GetSelectedMevos();
 
-        for (int i = 0; i < selectedMevoList.Count; i++)
+        if (!rayHit || !rayHit.collider.gameObject.CompareTag(holdableTag))
         {
-            Vector3 mevoTargetPosition = CalculateMevoTargetPosition(i, mousePosition);
+            for (int i = 0; i < selectedMevoList.Count; i++)
+            {
+                Vector3 mevoTargetPosition = CalculateMevoTargetPosition(i, mousePosition);
 
-            selectedMevoList[i].gameObject.GetComponent<MevoController>().SetTargetPosition(mevoTargetPosition);
+                selectedMevoList[i].gameObject.GetComponent<MevoController>().SetTargetPosition(mevoTargetPosition);
+            }
+            return;
         }
 
         if (selectedMevoList.Count == 1 && rayHit.collider.gameObject.CompareTag(holdableTag))

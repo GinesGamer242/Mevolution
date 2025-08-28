@@ -59,7 +59,7 @@ public class MevoController : MonoBehaviour
                     else
                         transform.Translate(walkDirection * moveSpeed * (1 - holdSpeedPenalization) * dt);
 
-                    if (targetHoldableGameObject != null)
+                    if (targetHoldableGameObject != null && currentHoldableData == null)
                     {
                         if (Vector3.Distance(transform.position, targetPosition) <= distanceToHoldable)
                         {
@@ -129,6 +129,7 @@ public class MevoController : MonoBehaviour
     public void SetTargetPosition(Vector3 newTargetPosition)
     {
         targetPosition = newTargetPosition;
+        targetHoldableGameObject = null;    
     }
 
     public void SetTargetGameObject(GameObject newTargetGameObject)

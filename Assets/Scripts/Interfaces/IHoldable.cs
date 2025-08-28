@@ -11,7 +11,12 @@ public enum HoldableCategory
 public enum FoodType
 {
     None,
-    Pineapple
+    Pineapple,
+    Watermelon,
+    Meat,
+    Fish,
+    Flower,
+    Starfruit
 }
 
 public enum MaterialType

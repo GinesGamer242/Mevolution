@@ -25,12 +25,12 @@
                 },
                 {
                     "name": "MoveCamera",
-                    "type": "Value",
-                    "id": "7b7254d3-acc7-4fcc-a36c-881beb332556",
-                    "expectedControlType": "Vector2",
+                    "type": "Button",
+                    "id": "3d222981-37fb-4adf-a32c-54facd671acf",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -49,7 +49,7 @@
                     "name": "",
                     "id": "e840d7df-1650-4474-a16d-849a9f84669b",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "SelectMevo",
@@ -58,9 +58,9 @@
                 },
                 {
                     "name": "",
-                    "id": "ad4e3219-a521-4740-9d1b-a1a648a2ff58",
-                    "path": "",
-                    "interactions": "",
+                    "id": "1344ac6c-52d6-450a-8695-81d357d96ada",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "MoveCamera",

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 31799cc193316a746a8885d06573f299
+guid: fb0871a7e2deeb54c8e79234761f28c6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 732094384580353432
-    second: ml_spriteFlower_0
+      213: -2844531463381759980
+    second: meat_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ml_spriteFlower_0
+      name: meat_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1
-        width: 312
-        height: 512
+        x: 10
+        y: 29
+        width: 129
+        height: 96
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 89d58f6c6fbe82a00800000000000000
-      internalID: 732094384580353432
+      spriteID: 41845bc74b13688d0800000000000000
+      internalID: -2844531463381759980
       vertices: []
       indices: 
       edges: []
