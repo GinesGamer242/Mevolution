@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "HoldableData", menuName = "Scriptable Materials/HoldableData")]
+[CreateAssetMenu(fileName = "HoldableData", menuName = "Scriptable Objects/HoldableData")]
 public class HoldableData : ScriptableObject
 {
     public HoldableCategory holdableCategory;

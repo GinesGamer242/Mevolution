@@ -1097,6 +1097,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 3d222981-37fb-4adf-a32c-54facd671acf
     m_ActionName: PlayerInput/MoveCamera
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1985375028}
+        m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+        m_MethodName: OnZoomCamera
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d5de1e54-b217-4f31-8789-1ab712c20983
+    m_ActionName: 'PlayerInput/ZoomCamera[/Mouse/scroll/y]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerInput
@@ -1249,7 +1265,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   usedCamera: {fileID: 519420031}
-  cameraMoveSpeed: 0.1
+  cameraMoveSpeed: 0.026
+  zoomRange:
+    minZoomValue: 2
+    maxZoomValue: 9
 --- !u!1001 &256936498883064679
 PrefabInstance:
   m_ObjectHideFlags: 0
