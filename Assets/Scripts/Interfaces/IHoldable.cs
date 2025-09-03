@@ -28,4 +28,8 @@ public enum MaterialType
 public interface IHoldable
 {
     public HoldableData GetHoldableData();
+
+    public Vector3 GetHoldablePosition();
+
+    public GameObject GetHoldableGameObject();
 }

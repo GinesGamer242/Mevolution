@@ -6,12 +6,26 @@ using UnityEngine.InputSystem.Interactions;
 
 public class MevoManager : MonoBehaviour
 {
+    public static MevoManager instance { get; private set; }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    //////////////////////////////////////////
+
     [SerializeField]
     List<Mevo> mevoList = new List<Mevo>();
     [SerializeField]
     string mevoTag;
-    [SerializeField]
-    string holdableTag;
 
     [Header("Group Settings")]
     [SerializeField]
@@ -28,26 +42,25 @@ public class MevoManager : MonoBehaviour
 
         if (!rayHit || !rayHit.collider.gameObject.CompareTag(mevoTag))
         {
-            foreach (var mevo in mevoList)
+            foreach (Mevo mevo in mevoList)
             {
-                ChangeMevoSelection(mevo, false);
+                ChangeMevoSelectionState(mevo, false);
             }
             return;
         }
-
-        if (rayHit.collider.gameObject.CompareTag(mevoTag))
+        else
         {
             AddMevoToList(rayHit.collider.gameObject);
 
             Mevo selectedMevo = GetMevoByGameObject(rayHit.collider.gameObject);
 
             if (selectedMevo.isSelected)
-                ChangeMevoSelection(selectedMevo, false);
+                ChangeMevoSelectionState(selectedMevo, false);
             else
             {
                 if (GetSelectedMevos().Count < mevoSelectionLimit)
                 {
-                    ChangeMevoSelection(selectedMevo, true);
+                    ChangeMevoSelectionState(selectedMevo, true);
                 }
             }
         }
@@ -55,7 +68,7 @@ public class MevoManager : MonoBehaviour
 
     public void OnMevoMove(InputAction.CallbackContext context)
     {
-        if (!context.started) return;
+        if (!context.performed) return;
 
         var rayHit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()));
 
@@ -64,21 +77,62 @@ public class MevoManager : MonoBehaviour
 
         List<Mevo> selectedMevoList = GetSelectedMevos();
 
-        if (!rayHit || !rayHit.collider.gameObject.CompareTag(holdableTag))
+        if (!rayHit)
         {
-            for (int i = 0; i < selectedMevoList.Count; i++)
-            {
-                Vector3 mevoTargetPosition = CalculateMevoTargetPosition(i, mousePosition);
-
-                selectedMevoList[i].gameObject.GetComponent<MevoController>().SetTargetPosition(mevoTargetPosition);
-            }
+            AssignMevosTargetPositions(selectedMevoList, mousePosition);
             return;
         }
 
-        if (selectedMevoList.Count == 1 && rayHit.collider.gameObject.CompareTag(holdableTag))
+        if (rayHit.collider.gameObject.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
-            selectedMevoList[0].gameObject.GetComponent<MevoController>().SetTargetGameObject(rayHit.collider.gameObject);
+            if (interactable.IsSingularInteraction())
+            {
+                selectedMevoList[0].gameObject.GetComponent<MevoController>().SetTargetInteractable(interactable);
+            }
+            else
+            {
+                for (int i = 0; i < selectedMevoList.Count; i++)
+                    selectedMevoList[i].gameObject.GetComponent<MevoController>().SetTargetInteractable(interactable);
+            }
+            AssignMevosTargetPositions(selectedMevoList, interactable.GetInteractionPosition());
+
+            return;
         }
+        else if (rayHit.collider.gameObject.TryGetComponent<IHoldable>(out IHoldable holdable))
+        {
+            Mevo firstFreeMevo = null;
+            int firstFreeMevoIteration = 0;
+            bool firstFreeMevoFound = false;
+
+            for (int i = 0; i < selectedMevoList.Count; i++)
+                if (!selectedMevoList[i].isHolding && !firstFreeMevoFound)
+                {
+                    firstFreeMevo = selectedMevoList[i];
+                    firstFreeMevoIteration = i;
+                    firstFreeMevoFound = true;
+                }
+
+            if (firstFreeMevo != null)
+            {
+                firstFreeMevo.gameObject.GetComponent<MevoController>().SetTargetHoldable(holdable);
+
+                Mevo temp = selectedMevoList[0];
+                selectedMevoList[0] = firstFreeMevo;
+                selectedMevoList[firstFreeMevoIteration] = temp;
+
+                AssignMevosTargetPositions(selectedMevoList, holdable.GetHoldablePosition());
+            }
+            else
+                AssignMevosTargetPositions(selectedMevoList, mousePosition);
+
+            return;
+        }
+        else
+        {
+            AssignMevosTargetPositions(selectedMevoList, mousePosition);
+            return;
+        }
+        
     }
 
       ///////////////////////
@@ -95,7 +149,7 @@ public class MevoManager : MonoBehaviour
                 isMevoInList = true;
         
         if (!isMevoInList)
-            mevoList.Add(new Mevo(mevoList.Count, false, mevoGameObject));
+            mevoList.Add(new Mevo(mevoList.Count, false, false, mevoGameObject));
     }
 
     private List<Mevo> GetSelectedMevos()
@@ -111,7 +165,7 @@ public class MevoManager : MonoBehaviour
         return selectedMevoList;
     }
 
-    private Mevo GetMevoByGameObject(GameObject mevoGameObject)
+    public Mevo GetMevoByGameObject(GameObject mevoGameObject)
     {
         Mevo mevoToReturn = null;
         for (int i = 0; i < mevoList.Count; i++)
@@ -127,6 +181,7 @@ public class MevoManager : MonoBehaviour
     {
         mevoToChange.gameObject.GetComponent<SpriteRenderer>().color = newColor;
     }
+
 
     private Vector3 CalculateMevoTargetPosition(int mevoNumber, Vector3 originalTargetPosition)
     {
@@ -145,13 +200,29 @@ public class MevoManager : MonoBehaviour
         return newTargetPosition;
     }
 
-    private void ChangeMevoSelection(Mevo mevo, bool selectedState)
+    private void AssignMevosTargetPositions(List<Mevo> mevosToAssign, Vector3 originalTargetPosition)
     {
-        mevo.isSelected = selectedState;
+        for (int i = 0; i < mevosToAssign.Count; i++)
+        {
+            Vector3 mevoTargetPosition = CalculateMevoTargetPosition(i, originalTargetPosition);
 
-        if (selectedState == true)
+            mevosToAssign[i].gameObject.GetComponent<MevoController>().SetTargetPosition(mevoTargetPosition);
+        }
+        return;
+    }
+
+    private void ChangeMevoSelectionState(Mevo mevo, bool selectionState)
+    {
+        mevo.isSelected = selectionState;
+
+        if (selectionState == true)
             ChangeMevoColor(mevo, Color.green);
         else
             ChangeMevoColor(mevo, Color.white);
+    }
+
+    public void ChangeMevoHoldState(Mevo mevo, bool holdState)
+    {
+        mevo.isHolding = holdState;
     }
 }

@@ -57,7 +57,6 @@ public class CameraController : MonoBehaviour
         newZoomValue = Mathf.Clamp(newZoomValue, zoomRange.minZoomValue, zoomRange.maxZoomValue);
 
         usedCamera.orthographicSize = newZoomValue;
-
     }
 
     public void OnDraggingCamera(InputAction.CallbackContext context)
@@ -81,10 +80,5 @@ public class CameraController : MonoBehaviour
         float scrollValue = context.ReadValue<float>();
 
         zoomValue = -scrollValue;
-    }
-
-    public void caca()
-    {
-
     }
 }

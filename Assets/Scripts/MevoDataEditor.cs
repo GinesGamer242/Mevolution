@@ -67,7 +67,7 @@ public class MevoDataEditor : Editor
             {
                 EditorGUILayout.PropertyField(foodIngredient);
             }
-            else if (!thisMevoData.isBasicMevo)
+            else
             {
                 EditorGUILayout.PropertyField(mevoIngredients);
             }

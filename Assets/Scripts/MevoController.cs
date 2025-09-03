@@ -1,20 +1,24 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem.LowLevel;
 
 public class MevoController : MonoBehaviour
 {
     public MevoState currentMevoState;
-    public Vector3 targetPosition;
-    public GameObject targetHoldableGameObject;
-    public HoldableData currentHoldableData;
+    Vector3 targetPosition;
+    public IHoldable targetHoldable;
+    IInteractable targetInteractable;
+    HoldableData currentHoldableData;
+
+    [SerializeField]
+    MevoData mevoData;
 
     [Header ("References")]
     [SerializeField]
     SpriteRenderer holdSpriteRenderer;
 
     [Header ("Attributes")]
-    [SerializeField]
-    float moveSpeed;
     [SerializeField]
     [Range(0.0f, 1.0f)]
     float holdSpeedPenalization;
@@ -55,28 +59,22 @@ public class MevoController : MonoBehaviour
                 {
                     Vector3 walkDirection = (targetPosition - transform.position).normalized;
                     if (currentHoldableData == null)
-                        transform.Translate(walkDirection * moveSpeed * dt);
+                        transform.Translate(walkDirection * mevoData.moveSpeed * dt);
                     else
-                        transform.Translate(walkDirection * moveSpeed * (1 - holdSpeedPenalization) * dt);
-
-                    if (targetHoldableGameObject != null && currentHoldableData == null)
-                    {
-                        if (Vector3.Distance(transform.position, targetPosition) <= distanceToHoldable)
-                        {
-                            Debug.Log("Distance to pick up: " + distanceToHoldable);
-                            if (targetHoldableGameObject.TryGetComponent<IHoldable>(out IHoldable holdable))
-                                PickHoldableUp(holdable.GetHoldableData());
-
-                            targetPosition = nullVectorValue;
-                        }
-                    }
+                        transform.Translate(walkDirection * mevoData.moveSpeed * (1 - holdSpeedPenalization) * dt);
                 }
                 else
                 {
-                    if (currentHoldableData != null)
+                    if (targetInteractable != null)
                     {
-                        PutHoldableDown();
+                        targetInteractable.OnInteracted(this.gameObject);
+                        targetInteractable = null;
                     }
+                    else if (targetHoldable != null)
+                    {
+                        PickHoldableUp(targetHoldable);
+                    }
+
                     targetPosition = nullVectorValue;
                 }
                 break;
@@ -98,12 +96,21 @@ public class MevoController : MonoBehaviour
         currentMevoState = newState;
     }
 
-    private void PickHoldableUp(HoldableData holdable)
+    public void RemoveCurrentHoldable()
+    {
+        currentHoldableData = null;
+        MevoManager.instance.ChangeMevoHoldState(MevoManager.instance.GetMevoByGameObject(this.gameObject), false);
+        holdSpriteRenderer.sprite = null;
+    }
+
+    private void PickHoldableUp(IHoldable holdable)
     {
         Debug.Log("Picking up");
-        Destroy(targetHoldableGameObject);
-        targetHoldableGameObject = null;
-        currentHoldableData = holdable;
+        Destroy(holdable.GetHoldableGameObject());
+        targetHoldable = null;
+        currentHoldableData = holdable.GetHoldableData();
+
+        MevoManager.instance.ChangeMevoHoldState(MevoManager.instance.GetMevoByGameObject(this.gameObject), true);
 
         holdSpriteRenderer.sprite = currentHoldableData.sprite;
     }
@@ -114,7 +121,15 @@ public class MevoController : MonoBehaviour
         Instantiate(currentHoldableData.prefab, transform.position, Quaternion.Euler(Vector3.zero));
         currentHoldableData = null;
 
+        MevoManager.instance.ChangeMevoHoldState(MevoManager.instance.GetMevoByGameObject(this.gameObject), false);
+
         holdSpriteRenderer.sprite = null;
+    }
+
+    public void ResetTargets()
+    {
+        targetInteractable = null;
+        targetHoldable = null;
     }
 
       /////////////////////////
@@ -129,12 +144,22 @@ public class MevoController : MonoBehaviour
     public void SetTargetPosition(Vector3 newTargetPosition)
     {
         targetPosition = newTargetPosition;
-        targetHoldableGameObject = null;    
     }
 
-    public void SetTargetGameObject(GameObject newTargetGameObject)
+    public void SetTargetHoldable(IHoldable newTargetHoldable)
     {
-        targetHoldableGameObject = newTargetGameObject;
-        targetPosition = newTargetGameObject.transform.position;
+        targetHoldable = newTargetHoldable;
+        targetInteractable = null;
+    }
+
+    public void SetTargetInteractable(IInteractable newTargetInteractable)
+    {
+        targetInteractable = newTargetInteractable;
+        targetHoldable = null;
+    }
+
+    public HoldableData GetCurrentHoldableData()
+    {
+        return currentHoldableData;
     }
 }

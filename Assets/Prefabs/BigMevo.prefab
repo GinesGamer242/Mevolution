@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3893209157915446876}
   - component: {fileID: 4142163478059551963}
   m_Layer: 0
-  m_Name: Mevo
+  m_Name: BigMevo
   m_TagString: Mevo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2528734959014611915}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -148,12 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214ae338b26b25d449325ad689d033e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMevoState: 0
-  targetPosition: {x: 0, y: 0, z: 0}
-  targetHoldableGameObject: {fileID: 0}
-  currentHoldableData: {fileID: 0}
+  mevoData: {fileID: 11400000, guid: 399390a493c85bb47a1e6fe7eeaa5cc4, type: 2}
   holdSpriteRenderer: {fileID: 9067733498820468526}
-  moveSpeed: 5
   holdSpeedPenalization: 0.5
   distanceToPosition: 0.1
   distanceToHoldable: 0.1

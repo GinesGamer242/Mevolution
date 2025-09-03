@@ -14,4 +14,14 @@ public class Holdable : MonoBehaviour, IHoldable
     {
         return holdableData;
     }
+
+    public Vector3 GetHoldablePosition()
+    {
+        return transform.position;
+    }
+
+    public GameObject GetHoldableGameObject()
+    {
+        return this.gameObject;
+    }
 }
