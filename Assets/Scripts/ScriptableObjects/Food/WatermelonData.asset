@@ -15,5 +15,6 @@ MonoBehaviour:
   holdableCategory: 0
   foodType: 2
   materialType: 0
+  spawnMevoData: {fileID: 11400000, guid: 1b19f6520cfdf054d82e9aa240cb910c, type: 2}
   sprite: {fileID: 8532703672136922592, guid: 795f4160d202e4c43bc4b4c145032c1a, type: 3}
   prefab: {fileID: 5803289922257807315, guid: 95ecea616f715494083f4f5951773455, type: 3}

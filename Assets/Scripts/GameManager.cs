@@ -21,5 +21,4 @@ public class GameManager : MonoBehaviour
     //////////////////////////////////////////
 
     public List<MevoData> mevoDataList;
-    public List<HoldableData > holdableDataList;
 }

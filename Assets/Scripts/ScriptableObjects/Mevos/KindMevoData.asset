@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3808b32f421738b4f98b214507ea6bbd, type: 3}
-  m_Name: BigMevoData
+  m_Name: KindMevoData
   m_EditorClassIdentifier: 
-  name: Big
-  sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  prefab: {fileID: 2528734959014611915, guid: cf36c4cdfd69a644bbfb952eb8a9d32f, type: 3}
+  name: Kind
+  sprite: {fileID: 0}
+  prefab: {fileID: 2528734959014611915, guid: 732401f9d1048ac4085ae6871d137111, type: 3}
   mevoIngredients: []
-  health: 10
-  damage: 1
-  attackSpeed: 1
-  moveSpeed: 2
+  health: 6
+  damage: 2
+  attackSpeed: 2
+  moveSpeed: 4
   attackRange: 3

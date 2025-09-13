@@ -1,3 +1,5 @@
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class Holdable : MonoBehaviour, IHoldable
@@ -7,7 +9,10 @@ public class Holdable : MonoBehaviour, IHoldable
 
     private void Start()
     {
-        GetComponent<SpriteRenderer>().sprite = holdableData.sprite;
+        if (TryGetComponent<SpriteRenderer>(out SpriteRenderer spriteRenderer))
+            spriteRenderer.sprite = holdableData.sprite;
+        else
+            Debug.LogWarning("Couldn't find a SpriteRenderer component in holdable GameObject");
     }
 
     public HoldableData GetHoldableData()

@@ -115,7 +115,7 @@ public class MevoController : MonoBehaviour
         holdSpriteRenderer.sprite = currentHoldableData.sprite;
     }
 
-    private void PutHoldableDown()
+    /*private void PutHoldableDown()
     {
         Debug.Log("Putting down");
         Instantiate(currentHoldableData.prefab, transform.position, Quaternion.Euler(Vector3.zero));
@@ -124,8 +124,8 @@ public class MevoController : MonoBehaviour
         MevoManager.instance.ChangeMevoHoldState(MevoManager.instance.GetMevoByGameObject(this.gameObject), false);
 
         holdSpriteRenderer.sprite = null;
-    }
-
+    }*/
+    
     public void ResetTargets()
     {
         targetInteractable = null;
@@ -161,5 +161,10 @@ public class MevoController : MonoBehaviour
     public HoldableData GetCurrentHoldableData()
     {
         return currentHoldableData;
+    }
+
+    public MevoData GetMevoData()
+    {
+        return mevoData;
     }
 }

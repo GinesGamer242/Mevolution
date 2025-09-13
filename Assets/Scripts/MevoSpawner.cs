@@ -20,17 +20,22 @@ public class MevoSpawner : MonoBehaviour, IInteractable
 
     public void OnInteracted(GameObject interactionMevoGameObject)
     {
+        Debug.Log("uwu");
+
         MevoController interactionMevoController = null;
 
         if (interactionMevoGameObject.TryGetComponent<MevoController>(out MevoController outMevoController))
             interactionMevoController = outMevoController;
         else
         {
-            Debug.LogError("MevoController wasn't found");
+            Debug.LogWarning("MevoController component wasn't found in Mevo " + interactionMevoGameObject.name);
             return;
         }
 
         HoldableData interactionMevoHoldableData = interactionMevoController.GetCurrentHoldableData();
+
+        if (interactionMevoHoldableData == null)
+            return;
 
         switch(interactionMevoHoldableData.holdableCategory)
         {

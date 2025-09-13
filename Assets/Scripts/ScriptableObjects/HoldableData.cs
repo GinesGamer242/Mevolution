@@ -8,5 +8,4 @@ public class HoldableData : ScriptableObject
     public MaterialType materialType;
     public MevoData spawnMevoData;
     public Sprite sprite;
-    public GameObject prefab;
 }

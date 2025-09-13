@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.TerrainTools;
 using UnityEngine;
 
-[CustomEditor(typeof(MevoData))]
 public class MevoDataEditor : Editor
 {
     #region SerializedProperties
@@ -20,7 +19,7 @@ public class MevoDataEditor : Editor
     SerializedProperty foodIngredient;
     SerializedProperty mevoIngredients;
 
-    bool statsGroup, ingredientsGroup = false;
+    bool statsGroup = false;
     #endregion SerializedProperties
 
     private void OnEnable()
@@ -33,10 +32,7 @@ public class MevoDataEditor : Editor
         damage = serializedObject.FindProperty("damage");
         attackSpeed = serializedObject.FindProperty("attackSpeed");
         moveSpeed = serializedObject.FindProperty("moveSpeed");
-
-        isBasicMevo = serializedObject.FindProperty("isBasicMevo");
         foodIngredient = serializedObject.FindProperty("foodIngredient");
-        mevoIngredients = serializedObject.FindProperty("mevoIngredients");
     }
 
     public override void OnInspectorGUI()
@@ -56,21 +52,6 @@ public class MevoDataEditor : Editor
             EditorGUILayout.PropertyField(damage);
             EditorGUILayout.PropertyField(attackSpeed);
             EditorGUILayout.PropertyField(moveSpeed);
-        }
-        EditorGUILayout.EndFoldoutHeaderGroup();
-
-        ingredientsGroup = EditorGUILayout.BeginFoldoutHeaderGroup(ingredientsGroup, "Ingredients");
-        if (ingredientsGroup)
-        {
-            EditorGUILayout.PropertyField(isBasicMevo);
-            if (thisMevoData.isBasicMevo)
-            {
-                EditorGUILayout.PropertyField(foodIngredient);
-            }
-            else
-            {
-                EditorGUILayout.PropertyField(mevoIngredients);
-            }
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
 

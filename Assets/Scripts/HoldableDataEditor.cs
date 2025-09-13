@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.TerrainTools;
 using UnityEngine;
 
-[CustomEditor(typeof(HoldableData))]
 public class HoldableDataEditor : Editor
 {
     #region SerializedProperties
