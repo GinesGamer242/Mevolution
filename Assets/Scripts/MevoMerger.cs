@@ -39,8 +39,13 @@ public class MevoMerger : MonoBehaviour, IInteractable
             if (mevoMergeDataList.All(mevoData.mevoIngredients.Contains) &&
                 mevoMergeDataList.Count == mevoData.mevoIngredients.Count)
             {
+                List<GameObject> mevosToDestroy = new List<GameObject>();
+
                 foreach (GameObject mevo in mevoMergerPlatformScript.GetMevoMergeList())
-                    DestroyImmediate(mevo);
+                    mevosToDestroy.Add(mevo);
+
+                foreach (GameObject mevo in mevosToDestroy)
+                    MevoManager.instance.DestroyMevo(mevo);
 
                 mevoMergerPlatformScript.ClearMevoMergeList();
 
@@ -48,3 +53,4 @@ public class MevoMerger : MonoBehaviour, IInteractable
             }
     }
 }
+ 

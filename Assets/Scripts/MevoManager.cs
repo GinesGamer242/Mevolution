@@ -80,6 +80,10 @@ public class MevoManager : MonoBehaviour
         if (!rayHit)
         {
             AssignMevosTargetPositions(selectedMevoList, mousePosition);
+
+            foreach (Mevo mevo in selectedMevoList)
+                mevo.gameObject.GetComponent<MevoController>().ResetTargets();
+
             return;
         }
 
@@ -224,5 +228,16 @@ public class MevoManager : MonoBehaviour
     public void ChangeMevoHoldState(Mevo mevo, bool holdState)
     {
         mevo.isHolding = holdState;
+    }
+
+    public void DestroyMevo(GameObject mevoObjectToDestroy)
+    {
+        foreach (Mevo mevo in mevoList)
+            if (mevo.gameObject == mevoObjectToDestroy)
+                mevoList.Remove(mevo);
+            else
+                Debug.LogWarning("Mevo trying to be destroyed wasn't included in the Mevo List.");
+
+        Destroy(mevoObjectToDestroy);
     }
 }
